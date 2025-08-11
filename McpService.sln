@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36301.6
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualStudioMCPServer", "VisualStudioMCPServer\VisualStudioMCPServer.csproj", "{80B977E4-97B3-4B83-8C1D-389836B65EF8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "McpService", "McpService\McpService.csproj", "{80B977E4-97B3-4B83-8C1D-389836B65EF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualStudioMCPServer.Tests", "VisualStudioMCPServer.Tests\VisualStudioMCPServer.Tests.csproj", "{C201D43B-C2AC-4DAA-BA4F-6CFE88D055AF}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "McpService.Tests", "McpService.Tests\McpService.Tests.csproj", "{C201D43B-C2AC-4DAA-BA4F-6CFE88D055AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

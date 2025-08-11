@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="VisualStudioMCPServer.d6454a6f-f83b-4ed2-9a33-411bffecc723" Version="1.0" Language="en-US" Publisher="David McCloskey" />
-    <DisplayName>VisualStudioMCPServer</DisplayName>
+    <Identity Id="McpService.d6454a6f-f83b-4ed2-9a33-411bffecc723" Version="1.0" Language="en-US" Publisher="David McCloskey" />
+    <DisplayName>McpService</DisplayName>
     <Description>Empty VSIX Project.</Description>
   </Metadata>
   <Installation>

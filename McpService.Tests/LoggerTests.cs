@@ -1,8 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using VisualStudioMCPServer.Tests.Mock;
+using McpService.Tests.Mock;
 
-namespace VisualStudioMCPServer.Tests
+namespace McpService.Tests
 {
     [TestClass]
     public class LoggerTests

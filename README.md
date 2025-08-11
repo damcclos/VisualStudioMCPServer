@@ -1,1 +1,1 @@
-# VisualStudioMCPServer
+# McpService

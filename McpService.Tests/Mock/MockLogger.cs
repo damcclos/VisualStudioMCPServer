@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VisualStudioMCPServer;
+using McpService;
 
-namespace VisualStudioMCPServer.Tests.Mock
+namespace McpService.Tests.Mock
 {
     class MockLogger : ILogger
     {
