@@ -10,7 +10,7 @@ namespace McpService
 {
     public interface ILoggerFactory
     {
-        ILogger CreateLogger(string identifier = null);
+        ILogger CreateLogger(string? identifier = null);
     }
 
     public interface ILogger
@@ -21,9 +21,9 @@ namespace McpService
     public class Logger : ILogger
     {
         private readonly ILogger _logger;
-        private readonly string _identifier;
+        private readonly string? _identifier;
 
-        public Logger(ILogger logger, string identifier = null)
+        public Logger(ILogger logger, string? identifier = null)
         {
             _logger = logger;
             _identifier = identifier?.Length != 0 ? identifier : null;

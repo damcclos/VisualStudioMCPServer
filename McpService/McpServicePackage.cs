@@ -1,7 +1,11 @@
 ﻿using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Composition;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Packaging;
@@ -13,25 +17,32 @@ namespace McpService
 {
     [Guid("18296ddc-2e02-43b6-8026-f6147188d797")]
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-    [ProvideService(typeof(SMcpService), IsAsyncQueryable = true, IsCacheable = true, IsFreeThreaded = true, ServiceName = "MCP Service")]
     [ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string, PackageAutoLoadFlags.BackgroundLoad)]
-    public sealed class McpServicePackage : AsyncPackage, IMcpService, ILoggerFactory, ILogger
+    public sealed class McpServicePackage : AsyncPackage, ILoggerFactory, ILogger
     {
-        protected override Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
-        {
-            Log("Registering MCP Service");
-            AddService(typeof(SMcpService), (_container, _cancellationToken, _serviceType) => Task.FromResult<object>(this), true);
+        private IComponentModel _componentModel;
 
-            return Task.CompletedTask;
+        [ImportMany]
+        private IEnumerable<Lazy<IMcpServerPrompt>> Prompts { get; }
+
+        [ImportMany]
+        private IEnumerable<IMcpServerResource> Resources { get; }
+
+        [ImportMany]
+        private IEnumerable<IMcpServerTool> Tools { get; }
+
+        protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
+        {
+            _componentModel = await GetServiceAsync(typeof(SComponentModel)) as IComponentModel;
         }
 
-        public ILogger CreateLogger(string identifier = null)
+        public ILogger CreateLogger(string? identifier = null)
         {
             return new Logger(this, identifier);
         }
 
         private Guid _mcpOutputPaneGuid = new Guid("A1B2C3D4-E5F6-7890-ABCD-EF1234567890");
-        private IVsOutputWindowPane _mcpOutputPane;
+        private IVsOutputWindowPane? _mcpOutputPane;
 
         [SuppressMessage("Usage", "VSTHRD100:Avoid async void methods", Justification = "Try catch block implemented")]
         public async void Log(string message)
