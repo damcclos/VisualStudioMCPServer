@@ -1,17 +1,15 @@
-﻿using Microsoft;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.ServiceHub.Framework;
+﻿using BasicProvider.Tools;
+using McpProvider;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.ServiceBroker;
-using ModelContextProtocol.Server;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
 using Task = System.Threading.Tasks.Task;
 
-namespace McpService
+namespace BasicProvider
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -31,17 +29,16 @@ namespace McpService
     /// </para>
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-    [Guid(McpServicePackage.PackageGuidString)]
+    [Guid(BasicProviderPackage.PackageGuidString)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string, PackageAutoLoadFlags.BackgroundLoad)]
-    [ProvideService(typeof(SMcpService), IsAsyncQueryable = true, IsCacheable = true, IsFreeThreaded = true, ServiceName = "MCP Service")]
-    public sealed class McpServicePackage : AsyncPackage
+    public sealed class BasicProviderPackage : AsyncPackage
     {
-        private IMcpServer? m_mcpServer;
+        private IHost? m_host;
 
         /// <summary>
-        /// McpServicePackage GUID string.
+        /// BasicProviderPackage GUID string.
         /// </summary>
-        public const string PackageGuidString = "0b0f0f74-b73f-4344-82d5-ec563729b765";
+        public const string PackageGuidString = "0f98818c-dc10-4ae1-80d6-d858f30d1c0c";
 
         /// <summary>
         /// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -50,22 +47,28 @@ namespace McpService
         /// <param name="cancellationToken">A cancellation token to monitor for initialization cancellation, which can occur when VS is shutting down.</param>
         /// <param name="progress">A provider for progress updates.</param>
         /// <returns>A task representing the async work of package initialization, or an already completed task if there is none. Do not return null from this method.</returns>
-        protected override Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
+        protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
-            AddService(typeof(SMcpService), CreateMcpServiceAsync, true);
-
-            var builder = WebApplication.CreateBuilder();
-
-            return Task.CompletedTask;
+            var builder = Host.CreateDefaultBuilder();
+            builder.ConfigureServices(serviceCollection =>
+            {
+                serviceCollection
+                    .AddMcpProvider()
+                    .AddMcpServer()
+                        .WithTools<EchoTool>();
+            });
+            m_host = await builder.StartAsync(cancellationToken);
         }
-
-        private Task<object?> CreateMcpServiceAsync(IAsyncServiceContainer container, CancellationToken cancellationToken, Type serviceType) => Task.FromResult<object?>(new McpService());
 
         protected override void Dispose(bool disposing)
         {
             if(disposing)
             {
+                (m_host as IDisposable)?.Dispose();
+                m_host = null;
             }
+
+            base.Dispose(disposing);
         }
     }
 }

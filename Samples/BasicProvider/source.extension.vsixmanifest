@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="McpService.fc186fc1-5c9f-4490-b34b-5f03c865dd54" Version="1.0" Language="en-US" Publisher="David McCloskey" />
-        <DisplayName>McpService</DisplayName>
-        <Description xml:space="preserve">Empty VSIX Project.</Description>
-        <Preview>true</Preview>
+        <Identity Id="BasicProvider.27526a4d-43bd-4236-9737-147d4c561797" Version="1.0" Language="en-US" Publisher="David McCloskey" />
+        <DisplayName>BasicProvider</DisplayName>
+        <Description>Empty VSIX Project.</Description>
     </Metadata>
     <Installation>
         <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
@@ -13,6 +12,7 @@
     </Installation>
     <Dependencies>
         <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+        <Dependency d:Source="Project" d:ProjectName="McpProvider" d:InstallSource="Download" DisplayName="|McpProvider;VSIXNameProjectOutputGroup|" Id="|McpProvider;VSIXIdentifierProjectOutputGroup|" />
     </Dependencies>
     <Prerequisites>
         <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,18.0)" DisplayName="Visual Studio core editor" />
