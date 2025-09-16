@@ -72,15 +72,11 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="ModelContextProtocol">
-      <Version>0.3.0-preview.4</Version>
-    </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\McpProvider\McpProvider.csproj">
-      <Project>{2e6801a9-3e82-d953-d35f-f9e623d8e5a0}</Project>
-      <Name>McpProvider</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    <ProjectReference Include="..\..\McpService\McpService.csproj">
+      <Project>{04b22ea7-c2df-455f-98bb-3cfaeecfded5}</Project>
+      <Name>McpService</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

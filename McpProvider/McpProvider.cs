@@ -10,16 +10,11 @@ using System.Threading.Tasks;
 
 namespace McpProvider
 {
-    internal sealed class McpProviderService(IMcpService? mcpService, IMcpServer mcpServer) : IMcpProvider, IHostedService
+    internal sealed class McpProviderService(IMcpService? mcpService, McpServerOptions options) : IMcpProvider, IHostedService
     {
         public async ValueTask DisposeAsync()
         {
-            if (mcpService != null)
-            {
-                await mcpService.UnregisterProvider(this);
-                mcpService = null;
-            }
-
+            await DisposeAsyncCore();
             GC.SuppressFinalize(this);
         }
 
@@ -28,6 +23,15 @@ namespace McpProvider
             throw new NotImplementedException();
         }
 
-        public async Task StopAsync(CancellationToken cancellationToken) => await DisposeAsync();
+        public async Task StopAsync(CancellationToken cancellationToken) => await DisposeAsyncCore(cancellationToken);
+
+        private async ValueTask DisposeAsyncCore(CancellationToken cancellationToken = default)
+        {
+            if (mcpService != null)
+            {
+                await mcpService.UnregisterProvider(this, cancellationToken);
+                mcpService = null;
+            }
+        }
     }
 }

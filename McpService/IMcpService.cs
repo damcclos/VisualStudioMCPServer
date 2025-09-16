@@ -14,23 +14,15 @@ namespace McpService
 
     public interface IMcpService
     {
-        Task RegisterProvider(IMcpProvider provider);
-        Task UnregisterProvider(IMcpProvider provider);
+        Task RegisterCapabilityProvider(IMcpCapabilityProvider provider, CancellationToken cancellationToken = default);
+        Task UnregisterCapabilityProvider(IMcpCapabilityProvider provider, CancellationToken cancellationToken = default);
     }
 
-    internal class McpService : IHostedService
+    public class McpService : IMcpService
     {
-        public McpService(IMcpServer mcpServer)
-        { }
-
-        public Task StartAsync(CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        public Task RegisterCapabilityProvider(IMcpCapabilityProvider provider, CancellationToken cancellationToken = default) =>
+            Task.CompletedTask;
+        public Task UnregisterCapabilityProvider(IMcpCapabilityProvider provider, CancellationToken cancellationToken = default) =>
+            Task.CompletedTask;
     }
 }

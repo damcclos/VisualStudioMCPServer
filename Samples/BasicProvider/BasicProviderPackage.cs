@@ -1,5 +1,5 @@
 ﻿using BasicProvider.Tools;
-using McpProvider;
+using McpService;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio;
@@ -33,7 +33,7 @@ namespace BasicProvider
     [ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string, PackageAutoLoadFlags.BackgroundLoad)]
     public sealed class BasicProviderPackage : AsyncPackage
     {
-        private IHost? m_host;
+        private IMcpCapabilityProvider? m_provider;
 
         /// <summary>
         /// BasicProviderPackage GUID string.
@@ -49,23 +49,22 @@ namespace BasicProvider
         /// <returns>A task representing the async work of package initialization, or an already completed task if there is none. Do not return null from this method.</returns>
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
-            var builder = Host.CreateDefaultBuilder();
-            builder.ConfigureServices(serviceCollection =>
+            var builder = await this.CreateMcpCapabilityProviderBuilderAsync(cancellationToken);
+            if (!cancellationToken.IsCancellationRequested)
             {
-                serviceCollection
-                    .AddMcpProvider()
+                builder.Services
                     .AddMcpServer()
                         .WithTools<EchoTool>();
-            });
-            m_host = await builder.StartAsync(cancellationToken);
+                m_provider = await builder.BuildAsync(cancellationToken);
+            }
         }
 
         protected override void Dispose(bool disposing)
         {
             if(disposing)
             {
-                (m_host as IDisposable)?.Dispose();
-                m_host = null;
+                (m_provider as IDisposable)?.Dispose();
+                m_provider = null;
             }
 
             base.Dispose(disposing);

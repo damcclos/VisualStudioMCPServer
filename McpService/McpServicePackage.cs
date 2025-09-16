@@ -1,9 +1,12 @@
 ﻿using Microsoft;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.ServiceHub.Framework;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.ServiceBroker;
+using ModelContextProtocol;
 using ModelContextProtocol.Server;
 using System;
 using System.Runtime.InteropServices;
@@ -54,17 +57,26 @@ namespace McpService
         {
             AddService(typeof(SMcpService), CreateMcpServiceAsync, true);
 
-            var builder = WebApplication.CreateBuilder();
+            var builder = new WebHostBuilder()
+                .UseKestrel()
+                .ConfigureServices(services =>
+                {
+                    services
+                        .AddMcpServer();
+                });
 
             return Task.CompletedTask;
         }
 
-        private Task<object?> CreateMcpServiceAsync(IAsyncServiceContainer container, CancellationToken cancellationToken, Type serviceType) => Task.FromResult<object?>(new McpService());
+        private Task<object?> CreateMcpServiceAsync(IAsyncServiceContainer container, CancellationToken cancellationToken, Type serviceType) => 
+            Task.FromResult<object?>(new McpService());
 
         protected override void Dispose(bool disposing)
         {
             if(disposing)
             {
+                (m_mcpServer as IDisposable)?.Dispose();
+                m_mcpServer = null;
             }
         }
     }
