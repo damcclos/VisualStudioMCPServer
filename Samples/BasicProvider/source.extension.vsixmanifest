@@ -12,7 +12,6 @@
     </Installation>
     <Dependencies>
         <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
-        <Dependency d:Source="Project" d:ProjectName="McpProvider" d:InstallSource="Download" DisplayName="|McpProvider;VSIXNameProjectOutputGroup|" Id="|McpProvider;VSIXIdentifierProjectOutputGroup|" />
     </Dependencies>
     <Prerequisites>
         <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,18.0)" DisplayName="Visual Studio core editor" />

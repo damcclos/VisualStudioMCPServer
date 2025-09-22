@@ -1,5 +1,4 @@
 ﻿using BasicProvider.Tools;
-using McpService;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio;
@@ -8,6 +7,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Task = System.Threading.Tasks.Task;
+using McpService.Core;
 
 namespace BasicProvider
 {
@@ -33,7 +33,7 @@ namespace BasicProvider
     [ProvideAutoLoad(VSConstants.UICONTEXT.NoSolution_string, PackageAutoLoadFlags.BackgroundLoad)]
     public sealed class BasicProviderPackage : AsyncPackage
     {
-        private IMcpCapabilityProvider? m_provider;
+        private IHost? m_host;
 
         /// <summary>
         /// BasicProviderPackage GUID string.
@@ -49,22 +49,33 @@ namespace BasicProvider
         /// <returns>A task representing the async work of package initialization, or an already completed task if there is none. Do not return null from this method.</returns>
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
-            var builder = await this.CreateMcpCapabilityProviderBuilderAsync(cancellationToken);
-            if (!cancellationToken.IsCancellationRequested)
+            var mcpService = await GetServiceAsync<SMcpService, IMcpService>(true, cancellationToken);
+
+            var builder = Host.CreateApplicationBuilder();
+            builder.Services
+                .AddMcpServer()
+                    .WithMcpService(mcpService)
+                    .WithTools<EchoTool>();
+            m_host = builder.Build();
+            if (m_host != null)
             {
-                builder.Services
-                    .AddMcpServer()
-                        .WithTools<EchoTool>();
-                m_provider = await builder.BuildAsync(cancellationToken);
+                await m_host.StartAsync(cancellationToken);
             }
         }
 
         protected override void Dispose(bool disposing)
         {
-            if(disposing)
+            if (disposing && m_host != null)
             {
-                (m_provider as IDisposable)?.Dispose();
-                m_provider = null;
+                try
+                {
+                    JoinableTaskFactory.Run(() => m_host.StopAsync());
+                }
+                finally
+                {
+                    m_host.Dispose();
+                    m_host = null;
+                }
             }
 
             base.Dispose(disposing);

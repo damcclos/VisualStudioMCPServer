@@ -63,7 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting">
-      <Version>10.0.0-preview.7.25380.108</Version>
+      <Version>10.0.0-rc.1.25451.107</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.SDK" Version="17.14.40265" ExcludeAssets="runtime" NoWarn="NU1604">
       <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -72,11 +72,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="ModelContextProtocol">
+      <Version>0.3.0-preview.4</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\McpService\McpService.csproj">
-      <Project>{04b22ea7-c2df-455f-98bb-3cfaeecfded5}</Project>
-      <Name>McpService</Name>
+    <ProjectReference Include="..\..\McpService.Core\McpService.Core.csproj">
+      <Project>{f13fec18-0b20-9ce7-c384-4347ef3f6d55}</Project>
+      <Name>McpService.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
